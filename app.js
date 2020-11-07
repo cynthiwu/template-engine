@@ -9,7 +9,76 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
+//render(employees);
 
+// Create an inquirer set of question. Start with Employee type. Based on outcome, create a subclass of Employee, confirm details, push properies to an array of objects to be rendered. 
+//Search how to make the questions loop. 
+
+//Please build you team
+//What is your manager's name?
+//What is your manager's id?
+//What is your manager's email?
+//What is your manager's office number?
+//Which type of team member would you like to add? (List) - Use arrow keys
+//Last option is - "I don't want to add a team member"
+
+const managerQuestions = [
+    {
+        type: "input",
+        message: "What is your manager's name?",
+        name: "managerName",
+    },
+    {
+        type: "input",
+        message: "What is your manager's id?",
+        name: "managerId",
+    },
+    {
+        type: "input",
+        message: "What is your manager's email?",
+        name: "managerEmail",
+    },
+    {
+        type: "input",
+        message: "What is your manager's office number?",
+        name: "managerOffice",
+    },
+]
+
+const employeeQuestion = 
+{
+    type: "list",
+    message: "Which type of team member would you like to add?",
+    name: "employeeType",
+    choices: [
+        "Engineer",
+        "Intern",
+        "I don't want to add any more team members",
+    ],
+}
+
+function initQuestions() {
+    inquirer.prompt(managerQuestions).then(subQuestions => {
+        inquirer.prompt(employeeQuestion);
+        let employeeType = employeeQuestion.name;
+        switch(employeeType) {
+            case "Engineer":
+                console.log("Engineer");
+                //Function here;
+                // Return or break;
+            case "Intern":
+                console.log("Intern")
+                //Function here;
+                //Return or break;
+            case "I don't want to add any more team members.":
+                console.log("I don't to add any more team members.")
+                //Function here;
+                //Return or break;
+        }
+    })
+};
+
+initQuestions();
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
