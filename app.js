@@ -124,13 +124,26 @@ function employeeRequest() {
                     })
                     break;
                 case "I don't want to add any more team members.":
-                    const renderhtml = render(employees);
-                    return fs.writeFile(outputPath, renderhtml, (err) => {
-                        if (err) throw err;
-                    }); 
+                    fs.access(OUTPUT_DIR, err => {
+                        if (err) {
+                            fs.mkdirSync(OUTPUT_DIR, (err) => {
+                                if (err) throw err;    
+                            });
+                            writeHtml();
+                        } else {
+                            writeHtml();
+                        }
+                    });      
             }
         })
 };
+
+function writeHtml() {
+    const renderhtml = render(employees);
+    fs.writeFile(outputPath, renderhtml, (err) => {
+        if (err) throw err;
+        }); 
+}
 
 initQuestions();
 
