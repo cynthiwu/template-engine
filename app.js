@@ -14,7 +14,42 @@ const Intern = require("./lib/Intern");
 const employees = [];
 
 // Input validation 
-const validName = function validateName(name) {
+
+
+const validId = function(id) {
+    for (let i = 0; i < employees.length; i++) {
+        let usedId = employees[i].id;
+        if (id === usedId) {
+            console.log("\nID has already been assigned. Please select a new ID.")
+            return false;
+        }
+    }
+    if (id === "") {
+        console.log("\nPlease enter a valid ID.");
+        return false;
+    } else if (isNaN(parseFloat(id))) {
+        console.log("\nPlease enter a number.")
+        return false;
+    } else {
+        return true;
+    }  
+}
+
+const validEmail = function(email) {
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    if (email === "") {
+        console.log("\nPlease enter a valid email address.");
+        return false;
+    } else if (!re.test(email.toLowerCase())) {
+        console.log("\nPlease enter a valid email address.");
+        return false;
+    } else {
+        return true;
+    }    
+}
+
+const validName = function(name) {
     if (name === "") {
         console.log("\nPlease enter a valid name.");
         return false;
@@ -23,21 +58,31 @@ const validName = function validateName(name) {
     }
 }
 
-const validId = function validateId(id) {
-    for (let i = 0; i < employees.length; i++) {
-        let usedId = employees[i].id;
-        if (id === usedId) {
-            console.log("\nID has already been assigned. Please select a new ID.")
-            return false;
-        }
-    }
-    if (isNaN(parseFloat(id))) {
-        console.log("\nPlease enter a number.")
+const validOffice = function(office) {
+    if (office === "") {
+        console.log("\nPlease enter a valid office number.");
         return false;
-    }
-    else {
+    } else {
         return true;
-    }  
+    }
+}
+
+const validGithub = function(github) {
+    if (github === "") {
+        console.log("\nPlease enter a valid github.");
+        return false;
+    } else {
+        return true;
+    }
+}
+
+const validSchool = function(school) {
+    if (school === "") {
+        console.log("\nPlease enter a valid school.");
+        return false;
+    } else {
+        return true;
+    }
 }
 
 // Question arrays based on employee type 
@@ -59,11 +104,14 @@ const managerQuestions = [
         type: "input",
         message: "What is the manager's email?",
         name: "email",
+        validate: validEmail,
     },
     {
         type: "input",
         message: "What is the manager's office number?",
         name: "office",
+        validate: validOffice,
+
     },
 ]
 
@@ -97,11 +145,14 @@ const engineerQuestions =
         type: "input",
         message: "What is the engineer's email?",
         name: "email",
+        validate: validEmail,
     },
     {
         type: "input",
         message: "What is the engineer's GitHub uername?",
         name: "github",
+        validate: validGithub,
+
     },
 ]
 
@@ -124,11 +175,13 @@ const internQuestions =
         type: "input",
         message: "What is the intern's email?",
         name: "email",
+        validate: validEmail,
     },
     {
         type: "input",
         message: "What is the intern's school?",
         name: "school",
+        validate: validSchool,
     },
 ]
 
