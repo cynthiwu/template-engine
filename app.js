@@ -1,6 +1,4 @@
-const Manager = require("./lib/Manager");
-const Engineer = require("./lib/Engineer");
-const Intern = require("./lib/Intern");
+
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
@@ -9,39 +7,33 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
-//render(employees);
+const Employee = require("./lib/Employee");
+const Manager = require("./lib/Manager");
+const Engineer = require("./lib/Engineer");
+const Intern = require("./lib/Intern");
 
-// Create an inquirer set of question. Start with Employee type. Based on outcome, create a subclass of Employee, confirm details, push properies to an array of objects to be rendered. 
-//Search how to make the questions loop. 
-
-//Please build you team
-//What is your manager's name?
-//What is your manager's id?
-//What is your manager's email?
-//What is your manager's office number?
-//Which type of team member would you like to add? (List) - Use arrow keys
-//Last option is - "I don't want to add a team member"
+const employees = [];
 
 const managerQuestions = [
     {
         type: "input",
-        message: "What is your manager's name?",
-        name: "managerName",
+        message: "What is the manager's name?",
+        name: "name",
     },
     {
         type: "input",
-        message: "What is your manager's id?",
-        name: "managerId",
+        message: "What is the manager's id?",
+        name: "id",
     },
     {
         type: "input",
-        message: "What is your manager's email?",
-        name: "managerEmail",
+        message: "What is the manager's email?",
+        name: "email",
     },
     {
         type: "input",
-        message: "What is your manager's office number?",
-        name: "managerOffice",
+        message: "What is the manager's office number?",
+        name: "office",
     },
 ]
 
@@ -49,33 +41,95 @@ const employeeQuestion =
 {
     type: "list",
     message: "Which type of team member would you like to add?",
-    name: "employeeType",
+    name: "type",
     choices: [
         "Engineer",
         "Intern",
-        "I don't want to add any more team members",
+        "I don't want to add any more team members.",
     ],
 }
 
+const engineerQuestions = 
+[
+    {
+        type: "input",
+        message: "What is the  engineer's name?",
+        name: "name",
+    },
+    {
+        type: "input",
+        message: "What is the engineer's id?",
+        name: "id",
+    },
+    {
+        type: "input",
+        message: "What is the engineer's email?",
+        name: "email",
+    },
+    {
+        type: "input",
+        message: "What is the engineer's GitHub uername?",
+        name: "github",
+    },
+]
+
+const internQuestions = 
+[
+    {
+        type: "input",
+        message: "What is the intern's name?",
+        name: "name",
+    },
+    {
+        type: "input",
+        message: "What is the intern's id?",
+        name: "id",
+    },
+    {
+        type: "input",
+        message: "What is the intern's email?",
+        name: "email",
+    },
+    {
+        type: "input",
+        message: "What is the intern's school?",
+        name: "school",
+    },
+]
+
 function initQuestions() {
-    inquirer.prompt(managerQuestions).then(subQuestions => {
-        inquirer.prompt(employeeQuestion);
-        let employeeType = employeeQuestion.name;
-        switch(employeeType) {
-            case "Engineer":
-                console.log("Engineer");
-                //Function here;
-                // Return or break;
-            case "Intern":
-                console.log("Intern")
-                //Function here;
-                //Return or break;
-            case "I don't want to add any more team members.":
-                console.log("I don't to add any more team members.")
-                //Function here;
-                //Return or break;
-        }
-    })
+    inquirer.prompt(managerQuestions).then(response => {
+        const newManager = new Manager(response.name, response.id, response.email, response.office);
+        employees.push(newManager);
+        employeeRequest();
+    });     
+};
+
+function employeeRequest() {
+    inquirer.prompt(employeeQuestion).then(response => {
+            let type = response.type;
+            switch(type) {
+                case "Engineer":
+                    inquirer.prompt(engineerQuestions).then(response => {
+                        const newEngineer = new Engineer(response.name, response.id, response.email, response.github);
+                        employees.push(newEngineer);
+                        employeeRequest();
+                    })
+                    break;
+                case "Intern":
+                    inquirer.prompt(internQuestions).then(response => {
+                        const newIntern = new Intern(response.name, response.id, response.email, response.school);
+                        employees.push(newIntern);
+                        employeeRequest();
+                    })
+                    break;
+                case "I don't want to add any more team members.":
+                    const renderhtml = render(employees);
+                    return fs.writeFile(outputPath, renderhtml, (err) => {
+                        if (err) throw err;
+                    }); 
+            }
+        })
 };
 
 initQuestions();
