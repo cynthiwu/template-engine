@@ -7,23 +7,53 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
-const Employee = require("./lib/Employee");
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 
 const employees = [];
 
+// Input validation 
+const validName = function validateName(name) {
+    if (name === "") {
+        console.log("\nPlease enter a valid name.");
+        return false;
+    } else {
+        return true;
+    }
+}
+
+const validId = function validateId(id) {
+    for (let i = 0; i < employees.length; i++) {
+        let usedId = employees[i].id;
+        if (id === usedId) {
+            console.log("\nID has already been assigned. Please select a new ID.")
+            return false;
+        }
+    }
+    if (isNaN(parseFloat(id))) {
+        console.log("\nPlease enter a number.")
+        return false;
+    }
+    else {
+        return true;
+    }  
+}
+
+// Question arrays based on employee type 
+
 const managerQuestions = [
     {
         type: "input",
         message: "What is the manager's name?",
         name: "name",
+        validate: validName, 
     },
     {
         type: "input",
         message: "What is the manager's id?",
         name: "id",
+        validate: validId,
     },
     {
         type: "input",
@@ -55,11 +85,13 @@ const engineerQuestions =
         type: "input",
         message: "What is the  engineer's name?",
         name: "name",
+        validate: validName, 
     },
     {
         type: "input",
         message: "What is the engineer's id?",
         name: "id",
+        validate: validId,
     },
     {
         type: "input",
@@ -73,17 +105,20 @@ const engineerQuestions =
     },
 ]
 
+
 const internQuestions = 
 [
     {
         type: "input",
         message: "What is the intern's name?",
         name: "name",
+        validate: validName, 
     },
     {
         type: "input",
         message: "What is the intern's id?",
         name: "id",
+        validate: validId,
     },
     {
         type: "input",
@@ -97,6 +132,7 @@ const internQuestions =
     },
 ]
 
+// Function to initiate manager prompt, create Manager object, push to array, and initiate employee type questioning once complete.
 function initQuestions() {
     inquirer.prompt(managerQuestions).then(response => {
         const newManager = new Manager(response.name, response.id, response.email, response.office);
@@ -105,6 +141,7 @@ function initQuestions() {
     });     
 };
 
+// Function to prompt employee type and initiate follow-up questions and object creation. 
 function employeeRequest() {
     inquirer.prompt(employeeQuestion).then(response => {
             let type = response.type;
@@ -138,6 +175,7 @@ function employeeRequest() {
         })
 };
 
+// Function to render HTML and write to output diretory
 function writeHtml() {
     const renderhtml = render(employees);
     fs.writeFile(outputPath, renderhtml, (err) => {
@@ -146,26 +184,3 @@ function writeHtml() {
 }
 
 initQuestions();
-
-// Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
-
-// After the user has input all employees desired, call the `render` function (required
-// above) and pass in an array containing all employee objects; the `render` function will
-// generate and return a block of HTML including templated divs for each employee!
-
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
-// Hint: you may need to check if the `output` folder exists and create it if it
-// does not.
-
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
-
-// HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
-// and Intern classes should all extend from a class named Employee; see the directions
-// for further information. Be sure to test out each class and verify it generates an
-// object with the correct structure and methods. This structure will be crucial in order
-// for the provided `render` function to work! ```
