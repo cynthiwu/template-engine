@@ -75,13 +75,12 @@ node app
 
 ### Demo
 
-Watch the video below to see how the quiz works. 
+Watch the video below to see how the quiz works.
 
 ![Template Engine Demo](./assets/template-engine.gif)
 
-Click the link below to download the demo video locally:
-[Template Engine Demo](./assets/template-engine.mp4)
-
+Click the following link below to view this demo on YouTube:
+[Template Engine Demo](https://youtu.be/8mVkqX1YHsw)
 
 ## Contributing
 

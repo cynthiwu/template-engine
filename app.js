@@ -15,7 +15,6 @@ const employees = [];
 
 // Input validation 
 
-
 const validId = function(id) {
     for (let i = 0; i < employees.length; i++) {
         let usedId = employees[i].id;
