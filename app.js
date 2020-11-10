@@ -92,7 +92,7 @@ const managerQuestions = [
         type: "input",
         message: "What is the manager's name?",
         name: "name",
-        validate: validName, 
+        validate: validName,
     },
     {
         type: "input",
